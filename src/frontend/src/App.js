@@ -8,7 +8,7 @@ import {
     PieChartOutlined,
     FileOutlined,
     TeamOutlined,
-    UserOutlined, LoadingOutlined, DownloadOutlined, PlusOutlined,
+    UserOutlined, LoadingOutlined, PlusOutlined,
 } from '@ant-design/icons';
 
 import './App.css';
@@ -70,6 +70,7 @@ function App() {
             <StudentDrawerForm
                 showDrawer={showDrawer}
                 setShowDrawer={setShowDrawer}
+                fetchStudents={fetchStudents}
             />
             <Table dataSource={students}
                    columns={columns}
