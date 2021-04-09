@@ -1,4 +1,4 @@
-import {Avatar, Badge, Button, Empty, Spin, Table, Tag} from "antd";
+import {Avatar, Badge, Button, Empty, Spin, Table, Tag, Radio, Popconfirm} from "antd";
 import {useState, useEffect} from 'react';
 import {getAllStudents} from "./client";
 
@@ -11,9 +11,13 @@ import {
     UserOutlined, LoadingOutlined, PlusOutlined,
 } from '@ant-design/icons';
 
-import './App.css';
-
 import StudentDrawerForm from "./StudentDrawerForm";
+import {removeStudent} from "./client";
+
+import './App.css';
+import {successNotification} from "./Notification";
+
+
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -29,7 +33,20 @@ const TheAvatar = ({name}) => {
     return <Avatar>{`${name.charAt(0)}${name.charAt(-1)}`}</Avatar>
 }
 
-const columns = [
+const deleteStudent = (id, fetchStudents) => {
+    removeStudent(id)
+        .then(() => {
+            successNotification('Student deleted', `Student ${id} was deleted`)
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+        .finally(() => {
+            fetchStudents();
+        });
+}
+
+const columns = (fetchStudents) => [
     {
         title: '',
         dataIndex: 'avatar',
@@ -53,6 +70,26 @@ const columns = [
         dataIndex: 'email',
         key: 'email',
     },
+    {
+        title: 'Actions',
+        dataIndex: 'actions',
+        key: 'actions',
+        render: (text, student) => {
+            return <>
+                <Radio.Group>
+                    <Popconfirm
+                        title={`Are you sure you want to delete ${student.name}`}
+                        onConfirm={() => deleteStudent(student.id, fetchStudents)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Radio.Button value='default'>Delete</Radio.Button>
+                    </Popconfirm>,
+                    <Radio.Button value='default'>Edit</Radio.Button>
+                </Radio.Group>
+            </>;
+        }
+    }
 ];
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -83,7 +120,19 @@ function App() {
             return <Spin indicator={antIcon} />;
         }
         if (students.length <= 0) {
-            return <Empty />;
+            return <>
+                <Button type="primary" shape="round"
+                        icon={<PlusOutlined />}
+                        size='small' onClick={() => setShowDrawer(!showDrawer)} >
+                    Add New Student
+                </Button>
+                <StudentDrawerForm
+                    showDrawer={showDrawer}
+                    setShowDrawer={setShowDrawer}
+                    fetchStudents={fetchStudents}
+                />
+                <Empty />
+            </>;
         }
         return <>
             <StudentDrawerForm
@@ -92,7 +141,7 @@ function App() {
                 fetchStudents={fetchStudents}
             />
             <Table dataSource={students}
-                   columns={columns}
+                   columns={columns(fetchStudents)}
                    bordered
                    title={() =>
                        <>
