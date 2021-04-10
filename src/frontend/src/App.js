@@ -215,7 +215,8 @@ function App() {
                 <Footer style={{ textAlign: 'center' }}>
                     By Diego Laurentino ©2021
                     <Divider>
-                        <a  target='_blank'
+                        <a  rel='noopener noreferrer'
+                            target='_blank'
                             href='https://github.com/LauretsDev'>
                             Click here for my Github Profile
                         </a>
