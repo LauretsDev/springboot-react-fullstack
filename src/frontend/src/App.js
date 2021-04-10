@@ -1,4 +1,4 @@
-import {Avatar, Badge, Button, Empty, Spin, Table, Tag, Radio, Popconfirm} from "antd";
+import {Avatar, Badge, Button, Empty, Spin, Table, Tag, Radio, Popconfirm, Divider} from "antd";
 import {useState, useEffect} from 'react';
 import {getAllStudents} from "./client";
 
@@ -212,7 +212,16 @@ function App() {
                         {renderStudents()}
                     </div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>By Diego Laurentino ©2021</Footer>
+                <Footer style={{ textAlign: 'center' }}>
+                    By Diego Laurentino ©2021
+                    <Divider>
+                        <a  rel='noopener noreferrer'
+                            target='_blank'
+                            href='https://github.com/LauretsDev'>
+                            Click here for my Github Profile
+                        </a>
+                    </Divider>
+                </Footer>
             </Layout>
         </Layout>
     </>;
