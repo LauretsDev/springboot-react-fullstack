@@ -15,7 +15,7 @@ import StudentDrawerForm from "./StudentDrawerForm";
 import {removeStudent} from "./client";
 
 import './App.css';
-import {successNotification} from "./Notification";
+import {errorNotification, successNotification} from "./Notification";
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -40,6 +40,12 @@ const deleteStudent = (id, fetchStudents) => {
         })
         .catch((err) => {
             console.error(err);
+            err.response.json().then(res => {
+                errorNotification(
+                    'There was an issue',
+                    `${res.message} [${res.status}] [${res.error}]`
+                );
+            });
         })
         .finally(() => {
             fetchStudents();
@@ -105,7 +111,16 @@ function App() {
         getAllStudents()
             .then(res => res.json())
             .then(data => {
-                setStudents(data)
+                setStudents(data);
+            })
+            .catch(err => {
+                console.log(err.response);
+                err.response.json().then(res => {
+                    console.log(res);
+                    errorNotification('There was an issue', `[${res.status}] [${res.error}] res.message`);
+                });
+            })
+            .finally(() => {
                 setFetching(false);
             });
     }
